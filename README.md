@@ -46,7 +46,25 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
     model = PPO("MlpPolicy", env)
     model.learn(total_timesteps=100000)
     ```
-9. Stop the CARLA Docker container:
+
+9. Evaluate UniLCD:
+    ```python
+    # Starter code for evaluating UniLCD
+    import unilcd_env
+    import gymnasium as gym
+    import json
+    from stable_baselines3 import PPO
+    from stable_baselines3.common.evaluation import evaluate_policy
+
+    config = json.load(open('unilcd_emb_eval_config.json'))
+    env = gym.make(**config)
+    load_path=os.path.join(config.log_dir, "tmp/best_model.zip")
+    model=PPO.load(load_path, env=vec_env)
+    mean_reward, std_reward = evaluate_policy(model, model.get_env(), n_eval_episodes=3)
+    print(mean_reward,std_reward)
+    ```
+
+10. Stop the CARLA Docker container:
     ```
     ./run_carla_docker.sh stop
     ```
