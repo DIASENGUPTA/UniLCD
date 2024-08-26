@@ -34,7 +34,7 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
 8. Now, start your gym environment and train UniLCD:
     ```python
     # Starter code for training UniLCD
-    import unilcd
+    import unilcd_env
     import gymnasium as gym
     import json
     from stable_baselines3 import PPO
