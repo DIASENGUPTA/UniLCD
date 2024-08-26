@@ -7,18 +7,18 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
 2. Docker >=27.0
 
 ## Setup
-1. Create a virtual environment and install the required dependences:
-    ```
-    pip install -r requirements.txt
-    ```
-2. Pull the CARLA 0.9.13 image for Docker:
-    ```
-    docker pull carlasim/carla:0.9.13
-    ```
 3. Clone this repository: 
     ```
     git clone https://github.com/DIASENGUPTA/UniLCD.git
     cd UniLCD
+    ```
+2. Create a virtual environment and install the required dependences:
+    ```
+    pip install -r requirements.txt
+    ```
+3. Pull the CARLA 0.9.13 image for Docker:
+    ```
+    docker pull carlasim/carla:0.9.13
     ```
 4. Modify the files inside [unilcd_env](unilcd_env/envs/il_models/) to use your imitation-learning trained models as directed. Additionally, place the weights for your models in a directory of your choosing.
 5. Install unilcd:
@@ -26,12 +26,17 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
     pip install unilcd_env
     ```
 6. Create a config file based on the [sample config file](unilcd_emb_eval_config.json) provided. You can check the environments available by checking the [envs](unilcd_env/envs/) folder for *env.py files.
-7. Before running training/evaluation, start the CARLA Docker container:
+7. Train Local and Cloud Policies:
+   ```
+   python unilcd_env/unilcd_env/envs/il_models/cloud_train.py
+   python unilcd_env/unilcd_env/envs/il_models/local_train.py
+   ```
+9. Before running training/evaluation, start the CARLA Docker container:
     ```
     chmod +x ./run_carla_docker.sh
     ./run_carla_docker.sh start
     ```
-8. Now, start your gym environment and train UniLCD:
+10. Now, start your gym environment and train UniLCD:
     ```python
     # Starter code for training UniLCD
     import unilcd_env
@@ -47,7 +52,7 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
     model.learn(total_timesteps=100000)
     ```
 
-9. Evaluate UniLCD:
+11. Evaluate UniLCD:
     ```python
     # Starter code for evaluating UniLCD
     import unilcd_env
@@ -64,7 +69,7 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
     print(mean_reward,std_reward)
     ```
 
-10. Stop the CARLA Docker container:
+12. Stop the CARLA Docker container:
     ```
     ./run_carla_docker.sh stop
     ```
