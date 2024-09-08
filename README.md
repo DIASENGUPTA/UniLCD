@@ -102,5 +102,5 @@ UniLCD/
     ```
     ./run_carla_docker.sh stop
     ```
-## License
+    
 ## Citation
