@@ -18,11 +18,11 @@ The dataset has been collected while navigating through eight predefined routes 
 
 UniLCD/ 
 └──  Images/ 
-    ├── 1.jpg |
-    ├── 2.jpg |
-    ├── ... 
-    ├── 10.jpg 
-    └── ... 
+    ├── 1.jpg /
+    ├── 2.jpg /
+    ├── ...   /
+    ├── 10.jpg /
+    └── ... /
 └── Info/ 
     ├── 1.npy 
     ├── 2.npy 
