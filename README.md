@@ -16,19 +16,21 @@ The dataset has been collected while navigating through eight predefined routes 
   - The following 2 columns represent the current location of the expert.
   - The last 2 columns indicate the closest next path points to the expert.
 
+```
 UniLCD/ 
 └──  Images/ 
-    ├── 1.jpg /
-    ├── 2.jpg /
-    ├── ...   /
-    ├── 10.jpg /
-    └── ... /
+    ├── 1.jpg 
+    ├── 2.jpg 
+    ├── ...   
+    ├── 10.jpg 
+    └── ... 
 └── Info/ 
     ├── 1.npy 
     ├── 2.npy 
     ├── ... 
     ├── 10.npy 
     └── ...
+```
 
 ## Requirements
 1. Python 3.7/8
