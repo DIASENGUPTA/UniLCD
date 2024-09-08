@@ -5,6 +5,31 @@ Embodied vision-based real-world systems, such as mobile robots, require careful
   <source src="assets/ECCV_final.mp4" type="video/mp4">
 </video>
 
+## Directory Structure
+The dataset has been collected while navigating through eight predefined routes in the Carla simulation. It includes images captured from the perspective of our ego walker, as well as detailed information about their actions and locations throughout the routes. Below is a brief overview of its contents and structure:
+
+**Images:** The `Images` folder contains a series of visuals captured from the perspective of the ego walker. Each image provides a first-person view of the walker’s journey, offering a detailed depiction of the surrounding environment and context.
+
+**Info:** The `Info` folder consists of numpy arrays with 7 columns:
+  - The first 2 columns correspond to the actions taken by the expert.
+  - The 3rd column indicates the presence (1) or absence (0) of pedestrians in the visible range.
+  - The following 2 columns represent the current location of the expert.
+  - The last 2 columns indicate the closest next path points to the expert.
+
+UniLCD/ 
+└──  Images/ 
+    ├── 1.jpg 
+    ├── 2.jpg 
+    ├── ... 
+    ├── 10.jpg 
+    └── ... 
+└── Info/ 
+    ├── 1.npy 
+    ├── 2.npy 
+    ├── ... 
+    ├── 10.npy 
+    └── ...
+
 ## Requirements
 1. Python 3.7/8
 2. Docker >=27.0
