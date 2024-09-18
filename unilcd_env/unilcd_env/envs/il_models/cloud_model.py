@@ -16,11 +16,7 @@ class CloudModel(nn.Module):
 # # Example of cloud model
 # import torch
 # import torch.nn as nn
-# import torchvision.models as models
-# import torch.nn as nn
-# import numpy as np
 # import timm
-# from torchvision.models.feature_extraction import create_feature_extractor
 
 
 # # # Create a new model without these layers
@@ -29,7 +25,6 @@ class CloudModel(nn.Module):
 #         super(CloudModel, self).__init__()
 #         self.model = timm.create_model('regnety_002', pretrained=True)
 #         self.features=nn.Sequential(*list(self.model.children())[:-1])
-#         print(self.model)
 #         self.goal=nn.Sequential(
 #             nn.Linear(2, int(self.model.head.fc.in_features/2)),
 #             nn.LeakyReLU(negative_slope=0.2),

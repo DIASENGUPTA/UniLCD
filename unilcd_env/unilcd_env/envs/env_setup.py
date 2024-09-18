@@ -49,6 +49,12 @@ def initCARLAObjs(**kwargs):
     
     # Load world
     world = World(client.get_world(), hud, minimap, state_manager, **kwargs)
+    settings = world.world.get_settings()
+    synchronous_master = True
+    settings.synchronous_mode = True
+    settings.fixed_delta_seconds = 0.05
+    
+    world.world.apply_settings(settings)
     logging.info("World Loaded")
     
     if kwargs['weather'] in util.WEATHER:

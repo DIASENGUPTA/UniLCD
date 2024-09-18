@@ -24,7 +24,7 @@ class CarlaDataset(Dataset):
                     ])
         self.transform2= transforms.Resize((96,96),antialias=True)
         self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        print(len(self.img_list))
+        # print(len(self.img_list))
 
     def __len__(self):
         return len(self.data_list)

@@ -46,7 +46,7 @@ class UniLCDEmbEnv(gym.Env):
         # Task Metrics for Evaluation
         self.task_metrics = []
         self.action_list = np.array([
-            0, 0, 0
+            [0, 0, 0]
         ])
         
         self.total_energy_consumption = 0.0
@@ -92,10 +92,10 @@ class UniLCDEmbEnv(gym.Env):
             z = 0.0,
         )
         self.curr_wpt_index = 0
+        pos = [self.world.destination_vehicle.get_location().x, self.world.destination_vehicle.get_location().y]
+
         self.start_wpt_index = self.minimap.planner.get_closest_point(pos)
         self.start_wpt = self.minimap.planner.path_pts[self.start_wpt_index,0:2]
-
-        pos = [self.world.destination_vehicle.get_location().x, self.world.destination_vehicle.get_location().y]
         self.dest_wpt_index = self.minimap.planner.get_closest_point(pos)
         self.dest_wpt = self.minimap.planner.path_pts[self.dest_wpt_index, 0:2]
 
@@ -135,10 +135,10 @@ class UniLCDEmbEnv(gym.Env):
     def compute_local_policy(self, image, location):
         img_tensor = self.normalizeTransform(self.tensorTransform(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))[:,:,80:560]).unsqueeze(0)
         location_tensor = torch.tensor(location, dtype=torch.float32).unsqueeze(0)
-        res=self.local_model(img_tensor.to(self.device), location_tensor.to(self.device))
-        emb=self.local_model(img_tensor.to(self.device), location_tensor.to(self.device),True).squeeze(0)
-        emb=emb.cpu().detach().numpy()
+        # res=self.local_model(img_tensor.to(self.device), location_tensor.to(self.device))
+        res, emb = self.local_model(img_tensor.to(self.device), location_tensor.to(self.device),True)
         res=res.cpu().detach().numpy()
+        emb=emb.squeeze(0).cpu().detach().numpy()
         self.action_list = np.vstack((self.action_list, np.array([res[0][0],res[0][1],0.0])))
         energy=0.15
         return self.action_list[-4:],emb,energy
@@ -175,7 +175,9 @@ class UniLCDEmbEnv(gym.Env):
         path_next_x,path_next_y = self.minimap.planner.get_next_goal(pos=[self.world.player.get_transform().location.x,self.world.player.get_transform().location.y],preview_s=5)
         
         wpt =np.array([path_next_x,path_next_y]) - np.array([self.world.player.get_transform().location.x,self.world.player.get_transform().location.y])
-        action,embedding,local_energy=self.local_policy(self.eyelevel_rgb_array,wpt ,pedestrian_detected)
+        action,embedding,local_energy=self.compute_local_policy(self.eyelevel_rgb_array,wpt)
+        
+        return action, embedding, pedestrian_detected, local_energy, wpt
         
     def _get_obs(self):
         self.snapshot, self.eyelevel_rgb, self.eyelevel_ins, self.eyelevel_dep = self.sync_mode.tick(None)
@@ -209,7 +211,7 @@ class UniLCDEmbEnv(gym.Env):
             ])
         )
         
-        closest_wpt_x, closest_wpt_y = self.minimap.planner.path_pts[p, :2]
+        closest_wpt_x, closest_wpt_y = self.minimap.planner.path_pts[closest_wpt, :2]
         
         nxt_wpt = np.array(
             self.minimap.planner.get_next_goal(
@@ -523,14 +525,14 @@ class UniLCDEmbEnv(gym.Env):
         # Add Collision Count
         updated_img = cv2.putText(updated_img, f'CC:', infraction_loc, font,
                                     fontScale, color, thickness, cv2.LINE_AA)
-        updated_img = cv2.putText(updated_img, f'{self.infraction_ped_collision:02.0f}', (84,40), font,
+        updated_img = cv2.putText(updated_img, f'{self.num_pedestrian_infractions:02.0f}', (84,40), font,
                                     fontScale, color, thickness, cv2.LINE_AA)
         
         # Add Energy 
         updated_img = cv2.putText(updated_img, f'Energy:  ', energy_loc, font,
                                     fontScale, color, thickness, cv2.LINE_AA)
         updated_img = cv2.rectangle(updated_img,(84,52), (184,68), (255,255,255), 1)
-        updated_img = cv2.rectangle(updated_img,(84,52), (84+int(self.energy_consumption/25.0), 68), (0,255-self.energy_consumption/25.0,100+self.energy_consumption/25.0),cv2.FILLED)
+        updated_img = cv2.rectangle(updated_img,(84,52), (84+int(self.total_energy_consumption/25.0), 68), (0,255-self.total_energy_consumption/25.0,100+self.total_energy_consumption/25.0),cv2.FILLED)
         
         # Add Latency
         updated_img = cv2.putText(updated_img, f'Latency: ', latency_loc, font,

@@ -155,7 +155,7 @@ def spawn_walkers(client, world, N, percent_disabled, percent_walking, percent_c
         else:
             print("Walker has no speed")
             walker_speed.append(0.0)
-        print(batch)
+        # print(batch)
         batch.append(SpawnActor(walker_bp, pt))
     
     count = 0

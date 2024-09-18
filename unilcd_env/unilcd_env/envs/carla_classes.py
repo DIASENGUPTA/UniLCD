@@ -697,7 +697,7 @@ class Planner():
         # print(pos.shape)
         index = np.argwhere((self.path_pts[:,0:2]==pos).all(1)==True)[0][0]
         dest_index = -1
-        print("Indices:",index, dest_index)
+        # print("Indices:",index, dest_index)
         # path_length_value = []
         # for i in range(index+1, self.path_length):
         #     path_length_value.append(np.linalg.norm(self.path_pts[i,0:2]-self.path_pts[i-1,0:2]))

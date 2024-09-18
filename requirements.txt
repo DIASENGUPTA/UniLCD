@@ -8,3 +8,4 @@ carla==0.9.13
 gymnasium>=0.28.1
 pygame>=2.1.2
 stable_baselines3>=2.0.0
+timm

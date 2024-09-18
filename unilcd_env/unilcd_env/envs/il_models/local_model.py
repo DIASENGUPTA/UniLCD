@@ -7,7 +7,7 @@ class LocalModel(nn.Module):
         super(LocalModel, self).__init__()
         # Add your model below.
 
-    def forward(self, observation, locations):
+    def forward(self, observation, locations, return_features=False):
         """
         Add the forward pass for your model below. 
         You should also return the embeddings from your feature extractor
@@ -21,10 +21,9 @@ class LocalModel(nn.Module):
         """
         pass
 
-#Example of local model
+# #Example of local model
 # import torch
 # import torch.nn as nn
-# import numpy as np
 # import timm
 
 
@@ -35,19 +34,36 @@ class LocalModel(nn.Module):
 #         observations is 96x96 pixels.
 #         """
 #         super(LocalModel, self).__init__()
-#         self.mobile = timm.create_model('mobilenetv2_100',pretrained=True)
-#         self.feature_extractor=nn.Sequential(*list(self.mobile.children())[:-1])
-#         self.mobile.classifier =nn.Sequential(
-#             nn.Linear(self.mobile.classifier.in_features+2, 2))
+#         self.model = timm.create_model('regnety_002', pretrained=True)
+#         self.goal = nn.Sequential(
+#             nn.Linear(2, 12),
+#             nn.LeakyReLU(negative_slope=0.2),
+#             nn.Linear(12,24)
+#         )
 
-#     def forward(self, observation, locations):
+#         self.lin = nn.Sequential(
+#             nn.Linear(48, 512),
+#             nn.LeakyReLU(negative_slope=0.2),
+#             nn.Linear(512, 256),
+#             nn.LeakyReLU(negative_slope=0.2),
+#             nn.Linear(256, 2)
+#         )
+
+#     def forward(self, observation, locations, return_features=False):
 #         """
 #         The forward pass of the network. Returns the prediction for the given
 #         input observation.
 #         observation:   torch.Tensor of size (batch_size, height, width, channel)
-#         return         torch.Tensor of size (batch_size, C)
+#         return         torch.Tensor of size (batch_size, C), features
 #         """
-#         x=self.feature_extractor(observation)
-#         x=torch.cat((x, locations), dim=1)
-#         x = self.mobile.classifier(x)
-#         return x
+#         x = self.model.stem(observation)
+#         x = self.model.s1(x)
+#         x = self.model.final_conv(x)
+#         x = self.model.head.global_pool(x)
+#         y = self.goal(locations)
+#         sf = torch.cat((x, y), dim=1)
+#         x = self.lin(sf)
+#         if return_features:
+#             return x, sf
+#         else:
+#             return x, None
